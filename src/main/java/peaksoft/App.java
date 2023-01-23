@@ -60,7 +60,10 @@ public class App {
 
         ServiceEmployee employee = new ServiceEmployeeImpl();
         ServiceJob job = new ServiceJobImpl();
-        for (;; ) {
+        Job newJob = new Job("Instructor", "JavaScript", "Fronted developer", 2);
+        Employee newEmployee = new Employee("Almaz", "Aitbaev", 18, "almaz@gmail", 2);
+
+        for (; ; ) {
             System.out.println("""
                     Enter 1 to Employee
                     Enter 2 to Job
@@ -82,19 +85,13 @@ public class App {
                             Enter 0 to Return
                             """);
                     int cmd1 = new Scanner(System.in).nextInt();
-                    if (cmd1==0) break;
+                    if (cmd1 == 0) break;
                     switch (cmd1) {
                         case 1:
                             employee.createEmployee();
                             break;
                         case 2:
-                            System.out.print("Enter first name: " +
-                                    "Enter last name: " +
-                                    "Enter age: " +
-                                    "Enter E-mail: " +
-                                    "Enter job ID: ");
-                            employee.addEmployee(new Employee(new Scanner(System.in).nextLine(),new Scanner(System.in).nextLine(),
-                                    new Scanner(System.in).nextInt(),new Scanner(System.in).nextLine(),new Scanner(System.in).nextInt()));
+                            employee.addEmployee(newEmployee);
                             break;
                         case 3:
                             employee.dropTable();
@@ -110,8 +107,8 @@ public class App {
                                     "Enter age: " +
                                     "Enter E-mail: " +
                                     "Enter job ID: ");
-                            employee.updateEmployee(id, new Employee(new Scanner(System.in).nextLine(),new Scanner(System.in).nextLine(),
-                                    new Scanner(System.in).nextInt(),new Scanner(System.in).nextLine(),new Scanner(System.in).nextInt()));
+                            employee.updateEmployee(id, new Employee(new Scanner(System.in).nextLine(), new Scanner(System.in).nextLine(),
+                                    new Scanner(System.in).nextInt(), new Scanner(System.in).nextLine(), new Scanner(System.in).nextInt()));
                             break;
                         case 6:
                             System.out.println(employee.getAllEmployees());
@@ -130,7 +127,8 @@ public class App {
                             break;
                     }
                 }
-            }if (cmd == 2) {
+            }
+            if (cmd == 2) {
                 while (true) {
                     System.out.println("""
                             Enter 1 to create Job
@@ -142,18 +140,13 @@ public class App {
                             Enter 0 to Return
                             """);
                     int cmd1 = new Scanner(System.in).nextInt();
-                    if (cmd1==0) break;
+                    if (cmd1 == 0) break;
                     switch (cmd1) {
                         case 1:
                             job.createJobTable();
                             break;
                         case 2:
-                            System.out.println("Enter Position: " +
-                                    "\nEnter Profession: " +
-                                    "\nEnter Description: " +
-                                    "\nEnter Experience: ");
-                            job.addJob(new Job(new Scanner(System.in).nextLine(),new Scanner(System.in).nextLine(),
-                                    new Scanner(System.in).nextLine(),new Scanner(System.in).nextInt()));
+                            job.addJob(newJob);
                             break;
                         case 3:
                             System.out.println("Enter ID to find: ");
@@ -172,9 +165,10 @@ public class App {
                             break;
                     }
                 }
-            }if (cmd == 3) System.out.println(Util.getConnection());
+            }
+            if (cmd == 3) System.out.println(Util.getConnection());
             if (cmd == 0) break;
-            if (cmd < 0 || cmd>3) System.out.println("Invalid command!");
+            if (cmd < 0 || cmd > 3) System.out.println("Invalid command!");
         }
     }
 }

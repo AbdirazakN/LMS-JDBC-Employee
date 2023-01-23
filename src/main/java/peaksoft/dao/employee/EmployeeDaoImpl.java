@@ -11,7 +11,11 @@ import java.util.List;
 import java.util.Map;
 
 public class EmployeeDaoImpl implements EmployeeDao {
-    private Connection connection = Util.getConnection();
+    private Connection connection;
+
+    public EmployeeDaoImpl() {
+        this.connection = Util.getConnection();
+    }
 
     @Override
     public void createEmployee() {
@@ -162,43 +166,31 @@ public class EmployeeDaoImpl implements EmployeeDao {
     @Override
     public Map<Employee, Job> getEmployeeById(Long employeeId) {
         Map<Employee,Job> result = new HashMap<>();
-        String sqlQuery = """
-                select * from employees where id = ?;
+        String query = """
+                select * from employees full join jobs j on employees.job_id = j.id where employees.id = ?;
                 """;
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery)) {
-            preparedStatement.setLong(1,employeeId);
-            preparedStatement.executeQuery();
-            ResultSet resultSet = preparedStatement.getResultSet();
-
-            Employee employee = new Employee();
-            if (!resultSet.next()) {
-                System.out.println("Does not exist!");
-            }
-            Job job = new Job();
-            if (!resultSet.next()) {
-                System.out.println("Does not exist!");
-            }
-            while (resultSet.next()) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)){
+            preparedStatement.setLong(1, employeeId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while(resultSet.next()){
+                Employee employee = new Employee();
+                Job job = new Job();
                 employee.setId(resultSet.getLong("id"));
                 employee.setFirstName(resultSet.getString(2));
                 employee.setLastName(resultSet.getString(3));
                 employee.setAge(resultSet.getInt(4));
                 employee.setEmail(resultSet.getString(5));
                 employee.setJobId(resultSet.getInt(6));
-
-
-                    job.setId(resultSet.getLong("id"));
-                    job.setPosition(resultSet.getString(2));
-                    job.setProfession(resultSet.getString(3));
-                    job.setDescription(resultSet.getString(4));
-                    job.setExperience(resultSet.getInt(5));
+                job.setId(resultSet.getLong(7));
+                job.setPosition(resultSet.getString(8));
+                job.setProfession(resultSet.getString(9));
+                job.setExperience(resultSet.getInt(10));
+                result.put(employee, job);
             }
-            resultSet.close();
-            return (Map<Employee, Job>) result.put(employee,job);
+            return result;
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            throw new RuntimeException(e);
         }
-        return null;
     }
 
     @Override
